@@ -1,0 +1,12 @@
+{
+  "ds_0": {
+    "__file__": "ad_exchange.csv",
+    "sort": "event",
+    "Forecasting Values": ["value"]
+  },
+  "ds_1": {
+    "__file__": "WTH.csv",
+    "sort": "",
+    "Forecasting Values": ["wetbulbcelsius"]
+  }
+}

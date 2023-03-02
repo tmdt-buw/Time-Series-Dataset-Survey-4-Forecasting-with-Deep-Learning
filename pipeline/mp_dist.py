@@ -1,8 +1,10 @@
+from typing import Dict, List
 from matrixprofile.algorithms import mpdist
 from matrixprofile.algorithms import maximum_subsequence
 import numpy as np
 import os
 from multiprocessing import Process, Manager
+
 
 def split_list(i, ds, num_threads):
     interval = int(len(ds) / num_threads)
@@ -37,45 +39,23 @@ def single_thread_compute(setups):
 
     return dict(setup_dict)
 
-def load_data(folder="np_files"):
-    array_dict = {}
-    files = os.listdir(folder)
+def compute_mpdist_window(file_name: str, data: np.array):
+    mp_window = maximum_subsequence(data)
+    print(f"{file_name} mpdist window: {mp_window}")
+    np.save(f"{file_name}_mp.npy", mp_window)
+    return mp_window
 
-    for i, file in enumerate(files):
-        paper_id = file.split(".")[-2]
-        array_dict[(i, paper_id)] = np.load(f"{folder}/{file}")
-    return array_dict
-
-
-def compute_window_len(index, folder="np_files"):
-    file = f"arr_{index}.npy"
-    array = [np.load(f"{folder}/{file}")]
-    print(array[0].shape)
-    return single_thread_compute(array)
-
-def main():
-    data = load_data("../np_files")
-    new_data = []
-    for i, x_i in data.items():
-        if len(x_i.shape) > 1:
-            x_i = x_i.reshape(-1)
-        new_data.append(x_i[:1_000_000])
-
-    window_len_dict = {2: 192, 3: 2356, 4: 9830, 5: 1740, 10: 346, 11: 3788, 12: 794, 13: 308, 17: 36044, 18: 236,
-                       19: 320, 20: 2150, 21: 244, 28: 12288, 29: 16, 30: 794, 39: 1690, 41: 6758, 49: 4916, 52: 230}
-
-
-    dists = np.load("np_dists.npy")
-    print(dists.shape)
-
-    keys = data.keys()
-    keys = {k:int(i.split("_")[1]) for k,i in keys}
-    data = new_data
+def compute_mpdist(window_len_dict: Dict[str, int], data: List[np.array], dist_file_name="dists.npy"):
+    if os.path.isfile(dist_file_name):
+        dists = np.load(dist_file_name)
+        assert dists.shape == (len(data), len(data)), "loaded data has wrong shape"
+    else:
+        dists = np.zeros([len(data), len(data)])
 
     for i, x_i in enumerate(data):
         for j, x_j in enumerate(data):
-            print(x_i.shape, x_j.shape, window_len_dict[keys[i]])
-            window_len = window_len_dict[keys[i]]
+            print(x_i.shape, x_j.shape, window_len_dict[i])
+            window_len = window_len_dict[i]
             if len(x_j) < window_len:
                 window_len = len(x_j) - 1
                 print("new window", window_len, len(x_i), len(x_j))
@@ -91,13 +71,3 @@ def main():
             else:
                 print(f"skiped: {i} - {j}")
 
-def compute_mpdist_window(id_list):
-    for id in id_list:
-        data = np.load(f"../np_files/arr_{id}.npy")
-        mp_window = maximum_subsequence(data)
-        print(id, mp_window)
-        np.save(f"../np_files/arr_{id}_mp", mp_window)
-
-
-if __name__ == '__main__':
-    main()

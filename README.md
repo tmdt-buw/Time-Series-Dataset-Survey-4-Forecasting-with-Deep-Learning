@@ -109,12 +109,26 @@ pip install -r requirements.txt
 ## Compute Stats
 ### Compute ADF, AC, PRV
 ````bash
-python pipeline/compute_stats.py
+python compute_stat_measurements.py --config-file "data/example_config.json" --create-cleaned-version --compute-stats
 ````
 
 ### Compute MPdist
 ````bash
-python pipeline/mp_dist.py
+python compute_stat_measurements.py --config-file "data/example_config.json" --create-cleaned-version --compute-mpdist
 ````
-
+### Example Config json
+````json
+{
+  "ds_0": {
+    "__file__": "ad_exchange.csv",
+    "sort": "event",
+    "Forecasting Values": ["value"]
+  },
+  "ds_1": {
+    "__file__": "WTH.csv",
+    "sort": "",
+    "Forecasting Values": ["wetbulbcelsius"]
+  }
+}
+````
 

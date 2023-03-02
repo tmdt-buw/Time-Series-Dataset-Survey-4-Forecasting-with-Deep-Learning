@@ -1,9 +1,6 @@
-import pandas as pd
-import os
-import json
 from tsfresh import extract_features
 from file_reader import FileReader
-from utils import get_cleaned_file
+from pipeline.utils import get_cleaned_file
 
 TS_FRESH_SETTINGS = {
     "agg_autocorrelation": [
@@ -52,8 +49,6 @@ class FeatureExtractorTask:
         df = df.iloc[:1_000_000]
         df['id'] = 1
         print("--- start extract Feature ---")
-        # 2. Extract the features.
-        # Turn of multiprocessing - the parallelism comes with multiple luigi workers.
 
         sort = "t" if sort else "date"
 
@@ -70,32 +65,7 @@ class FeatureExtractorTask:
         features.to_csv(self.out_dir)
 
 
-def compute_stats_datasets(id_list):
-    root_dir = os.getcwd()
-    out_dir = root_dir + "/../tmp/"
-
-    data_root = root_dir + "/../../time_series_datasets"
-
-    mapping_info_name = "../input_conf.json"
-    with open(mapping_info_name, "r") as json_file:
-        mapping_info = json.load(json_file)
-
-    datasets = {}
-    for key, item_list in mapping_info.items():
-        for item in item_list:
-            item['folder'] = key
-            datasets[int(item['id_paper'])] = item
-
-    for id, dataset in datasets.items():
-        if id in id_list or id_list is None:
-            filename = f"{dataset['folder']}/{dataset['__file__']}"
-            filename = get_cleaned_file(filename)
-            filename = f"{data_root}/{filename}"
-            if filename != "":
-                forecast_values = dataset['Forecasting Values'][0]
-                feature_extractor = FeatureExtractorTask(id=id, data_key=forecast_values, out_dir=out_dir)
-                feature_extractor.run(filename, sort=dataset["Sort"] != "")
-
-
-if __name__ == "__main__":
-    compute_stats_datasets([49])
+def compute_stats_one_ds(id: int, file_name: str, forecast_values: str, out_dir: str, sort: bool):
+    filename = get_cleaned_file(file_name)
+    feature_extractor = FeatureExtractorTask(id=id, data_key=forecast_values, out_dir=out_dir)
+    feature_extractor.run(filename, sort=sort)

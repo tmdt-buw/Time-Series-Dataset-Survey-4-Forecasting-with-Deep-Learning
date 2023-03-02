@@ -193,10 +193,6 @@ class FileReader:
         return categorical_dict
 
 
-def check_if_already_there(path):
-    file = "\\".join(path.split("\\")[-3:-1])
-    file_exists = os.path.exists(file + "_0_cleaned.csv")
-    return file_exists
 
 
 def read_files(mapping_info, root_dir: str="", multi_file_mapping: dict=None, multi_processing: bool=True,
@@ -211,7 +207,7 @@ def read_files(mapping_info, root_dir: str="", multi_file_mapping: dict=None, mu
             for single_item in items:
                 path = f"{root_dir}\\{folder_key}\\{single_item['__file__']}"
                 if pipeline:
-                    if single_item['__file__'] != "" and single_item['Forecasting Values'] != [""] and not check_if_already_there(path):
+                    if single_item['__file__'] != "" and single_item['Forecasting Values'] != [""]:
                         try:
                             if multi_file_mapping is not None and folder_key in multi_file_mapping.keys():
                                 item_list.append(m_file_reader.read_files_from_dir(path, multi_file_mapping[folder_key], multi_processing=multi_processing))
