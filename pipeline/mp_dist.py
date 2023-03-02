@@ -39,10 +39,11 @@ def single_thread_compute(setups):
 
     return dict(setup_dict)
 
-def compute_mpdist_window(file_name: str, data: np.array):
+def compute_mpdist_window(file_name: str, data: np.array, save: bool = False):
     mp_window = maximum_subsequence(data)
-    print(f"{file_name} mpdist window: {mp_window}")
-    np.save(f"{file_name}_mp.npy", mp_window)
+    if save:
+        print(f"{file_name} mpdist window: {mp_window}")
+        np.save(f"{file_name}/mp.npy", mp_window)
     return mp_window
 
 def compute_mpdist(window_len_dict: Dict[str, int], data: List[np.array], dist_file_name="dists.npy"):

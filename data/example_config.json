@@ -1,8 +1,8 @@
 {
   "ds_0": {
-    "__file__": "ad_exchange.csv",
-    "sort": "event",
-    "Forecasting Values": ["value"]
+    "__file__": "household_power_consumption.csv",
+    "sort": "",
+    "Forecasting Values": ["global_active_power"]
   },
   "ds_1": {
     "__file__": "WTH.csv",

@@ -12,7 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description='Compute Stat. Measurements for Time Series')
     parser.add_argument('--config-file', type=str, help='File path to config files, which defines the complete dataset',
                         required=True)
-    parser.add_argument('--compute-mpdist', type=bool, default=False,
+    parser.add_argument('--compute-mpdist', type=bool, default=True,
                         help='triggers the computation of mpdist between the defined datasets')
     parser.add_argument('--create-cleaned-version', type=bool, default=False,
                         help='cleans the dataset and writes an new file')
@@ -58,7 +58,7 @@ def main():
             file_name = f"{root_dir}/data/{key}/{ds_item['__file__']}"
             np_filename = "/".join(file_name.split("/")[:-1])
             data = np.load(f"{np_filename}/np_array.npy")
-            mp_window = compute_mpdist_window(np_filename, data)
+            mp_window = compute_mpdist_window(np_filename, data, True)
             mp_window_dict[i] = mp_window
             # only use a max window of 1M because of performance problems.
             data_list.append(data[:1_000_000])
