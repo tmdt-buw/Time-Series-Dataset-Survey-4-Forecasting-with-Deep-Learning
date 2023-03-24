@@ -1,6 +1,6 @@
 # Time-Series-Dataset-Survey-4-Forecasting-with-Deep-Learning
 
-## Paper: [Time Series Dataset Survey for Forecasting with Deep Learning](https://arxiv.org/abs/1905.10437)
+## Paper: [Time Series Dataset Survey for Forecasting with Deep Learning](https://doi.org/10.3390/forecast5010017)
 
 ## Install venv
 ````bash
