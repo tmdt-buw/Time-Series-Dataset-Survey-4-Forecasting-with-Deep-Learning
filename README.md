@@ -134,7 +134,7 @@ python compute_stat_measurements.py --config-file "data/example_config.json" --c
 ````
 
 ## Citation
-````json
+````
 @article{hahn2023time,
   title={Time Series Dataset Survey for Forecasting with Deep Learning},
   author={Hahn, Yannik and Langer, Tristan and Meyes, Richard and Meisen, Tobias},
